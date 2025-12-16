@@ -32,13 +32,18 @@ impl<const W: usize, const H: usize> Renderer<W, H> {
         // Calculate diffs between new frame and previous
         for (x, col) in next.iter().enumerate() {
             for (y, c) in col.iter().enumerate() {
+                let mut prev_char = ' ';
                 if let Some(prev) = self.previous.as_ref() {
-                    if prev[x][y] != *c {
-                        stdout.queue(MoveTo(x as u16, y as u16))?.queue(Print(*c))?;
-                    }
-                } else {
-                    stdout.queue(MoveTo(x as u16, y as u16))?.queue(Print(*c))?;
+                    prev_char = prev[x][y];
                 }
+                if prev_char == *c {
+                    continue;
+                }
+
+                stdout
+                    .queue(MoveTo(x as u16, y as u16))?
+                    .queue(SetForegroundColor(Color::White))?
+                    .queue(Print(*c))?;
             }
         }
 

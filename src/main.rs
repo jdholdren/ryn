@@ -97,6 +97,16 @@ fn run_game() -> Result<()> {
 fn create_frame(player_pos: (usize, usize)) -> render::Frame<WIDTH, HEIGHT> {
     let mut frame = [[' '; HEIGHT]; WIDTH];
 
+    // Draw the border
+    for i in 0..WIDTH {
+        frame[i][0] = '#';
+        frame[i][HEIGHT - 1] = '#';
+    }
+    for i in 0..HEIGHT {
+        frame[0][i] = '#';
+        frame[WIDTH - 1][i] = '#';
+    }
+
     // Draw player
     frame[player_pos.0][player_pos.1] = '@';
 
