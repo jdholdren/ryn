@@ -3,7 +3,7 @@ mod tiles;
 
 use crossterm::{
     cursor::{Hide, Show},
-    event::{Event, KeyCode, poll, read},
+    event::{Event, KeyCode, KeyEvent, poll, read},
     execute,
     style::ResetColor,
     terminal::{disable_raw_mode, enable_raw_mode},
@@ -31,51 +31,33 @@ fn main() -> Result<()> {
 }
 
 fn run_game() -> Result<()> {
-    let mut player_pos = (5, 5);
     let mut renderer = render::Renderer::<WIDTH, HEIGHT>::new();
 
-    let mut last_fps: u128 = 0;
+    let mut screen: Box<dyn Screen> = Box::new(Overworld { player_pos: (5, 5) });
 
-    let mut running = true;
-    while running {
+    let mut last_fps: u128 = 0;
+    while 1 == 1 {
         let frame_start = Instant::now();
 
         // Handle input (non-blocking)
+        let mut key_press: Option<KeyEvent> = None;
         if poll(Duration::from_millis(100)).unwrap_or(false)
             && let Ok(event) = read()
             && let Event::Key(key) = event
         {
-            match key.code {
-                KeyCode::Char('q') | KeyCode::Esc => running = false,
-                KeyCode::Char('w') | KeyCode::Up => {
-                    if player_pos.1 > 1 {
-                        player_pos.1 -= 1;
-                    }
-                }
-                KeyCode::Char('s') | KeyCode::Down => {
-                    if player_pos.1 < HEIGHT - 2 {
-                        player_pos.1 += 1;
-                    }
-                }
-                KeyCode::Char('a') | KeyCode::Left => {
-                    if player_pos.0 > 0 {
-                        player_pos.0 -= 1;
-                    }
-                }
-                KeyCode::Char('d') | KeyCode::Right => {
-                    if player_pos.0 < WIDTH - 1 {
-                        player_pos.0 += 1;
-                    }
-                }
-                _ => {}
-            }
+            key_press = Some(key);
         }
 
-        // TODO: Run update loop
+        // Run update loop
+        let (should_render, should_quit) = screen.update(key_press);
+        if should_quit {
+            break;
+        }
 
         // Render
-        let frame = create_frame(player_pos);
-        renderer.render(frame, last_fps)?;
+        if should_render {
+            renderer.render(screen.produce_frame(), last_fps)?;
+        }
 
         // Sleep for remaining time to maintain target FPS
         let frame_time = frame_start.elapsed();
@@ -93,22 +75,74 @@ fn run_game() -> Result<()> {
     Ok(())
 }
 
-// For now, takes a player position and makes a frame from the game state (player position).
-fn create_frame(player_pos: (usize, usize)) -> render::Frame<WIDTH, HEIGHT> {
-    let mut frame = [[' '; HEIGHT]; WIDTH];
+// A screen is a layer of the game that is essentially a game world.
+//
+// It can receive player input, decide to move its own tick, and then
+// produce a frame.
+trait Screen {
+    // Update receives elapsed time and updates its state based on player input.
+    fn update(&mut self, event: Option<KeyEvent>) -> (bool, bool);
+    // Asks the screen to produce a frame, could produce no frame if nothing of import happened.
+    fn produce_frame(&self) -> render::Frame<WIDTH, HEIGHT>;
+}
 
-    // Draw the border
-    for i in 0..WIDTH {
-        frame[i][0] = '#';
-        frame[i][HEIGHT - 1] = '#';
+// Overworld is tracking player locations along with just things on the map.
+struct Overworld {
+    player_pos: (usize, usize),
+}
+
+impl Screen for Overworld {
+    fn update(&mut self, event: Option<KeyEvent>) -> (bool, bool) {
+        // If no player input, don't render
+        if event.is_none() {
+            return (false, false);
+        }
+
+        let key = event.unwrap();
+        match key.code {
+            KeyCode::Char('q') | KeyCode::Esc => return (false, true),
+            KeyCode::Char('w') | KeyCode::Up => {
+                if self.player_pos.1 > 1 {
+                    self.player_pos.1 -= 1;
+                }
+            }
+            KeyCode::Char('s') | KeyCode::Down => {
+                if self.player_pos.1 < HEIGHT - 2 {
+                    self.player_pos.1 += 1;
+                }
+            }
+            KeyCode::Char('a') | KeyCode::Left => {
+                if self.player_pos.0 > 0 {
+                    self.player_pos.0 -= 1;
+                }
+            }
+            KeyCode::Char('d') | KeyCode::Right => {
+                if self.player_pos.0 < WIDTH - 1 {
+                    self.player_pos.0 += 1;
+                }
+            }
+            _ => {}
+        }
+
+        return (true, false);
     }
-    for i in 0..HEIGHT {
-        frame[0][i] = '#';
-        frame[WIDTH - 1][i] = '#';
+
+    fn produce_frame(&self) -> render::Frame<WIDTH, HEIGHT> {
+        let mut frame = [[' '; HEIGHT]; WIDTH];
+
+        // Draw the border
+        for i in 0..WIDTH {
+            frame[i][0] = '#';
+            frame[i][HEIGHT - 1] = '#';
+        }
+        for i in 0..HEIGHT {
+            frame[0][i] = '#';
+            frame[WIDTH - 1][i] = '#';
+        }
+
+        // Draw player
+        frame[self.player_pos.0][self.player_pos.1] = '@';
+
+        frame
     }
-
-    // Draw player
-    frame[player_pos.0][player_pos.1] = '@';
-
-    frame
 }
