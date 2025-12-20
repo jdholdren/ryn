@@ -10,7 +10,13 @@ use crossterm::{
     terminal::{Clear, ClearType},
 };
 
-pub type Frame<const W: usize, const H: usize> = [[char; H]; W];
+#[derive(PartialEq, Eq, Clone, Copy)]
+pub struct Tile {
+    pub c: char,
+    pub color: Color,
+}
+
+pub type Frame<const W: usize, const H: usize> = [[Tile; H]; W];
 
 pub struct Renderer<const W: usize, const H: usize> {
     previous: Option<Frame<W, H>>,
@@ -32,18 +38,21 @@ impl<const W: usize, const H: usize> Renderer<W, H> {
         // Calculate diffs between new frame and previous
         for (x, col) in next.iter().enumerate() {
             for (y, c) in col.iter().enumerate() {
-                let mut prev_char = ' ';
+                let mut prev_tile = Tile {
+                    c: ' ',
+                    color: Color::White,
+                };
                 if let Some(prev) = self.previous.as_ref() {
-                    prev_char = prev[x][y];
+                    prev_tile = prev[x][y];
                 }
-                if prev_char == *c {
+                if prev_tile == *c {
                     continue;
                 }
 
                 stdout
                     .queue(MoveTo(x as u16, y as u16))?
-                    .queue(SetForegroundColor(Color::White))?
-                    .queue(Print(*c))?;
+                    .queue(SetForegroundColor(c.color))?
+                    .queue(Print(c.c))?;
             }
         }
 
@@ -51,10 +60,7 @@ impl<const W: usize, const H: usize> Renderer<W, H> {
         stdout
             .queue(MoveTo(2, (H - 1) as u16))?
             .queue(SetForegroundColor(Color::Cyan))?
-            .queue(Print(format!(
-                "WASD/Arrows: Move | Q/ESC: Quit | {:2}fps",
-                fps
-            )))?
+            .queue(Print(format!("CTRL-C: Quit | {:2}fps", fps)))?
             .flush()?;
 
         self.previous = Some(next);
