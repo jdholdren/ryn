@@ -35,24 +35,30 @@ impl<const W: usize, const H: usize> Renderer<W, H> {
             stdout.queue(Clear(ClearType::All))?.queue(MoveTo(0, 0))?;
         }
 
-        // Calculate diffs between new frame and previous
-        for (x, col) in next.iter().enumerate() {
-            for (y, c) in col.iter().enumerate() {
-                let mut prev_tile = Tile {
-                    c: ' ',
-                    color: Color::White,
-                };
-                if let Some(prev) = self.previous.as_ref() {
-                    prev_tile = prev[x][y];
-                }
-                if prev_tile == *c {
+        // Calculate diffs between new frame and previous, iterating row-major
+        // (top to bottom, left to right) to minimize cursor jumping
+        let mut current_color: Option<Color> = None;
+        for y in 0..H {
+            for x in 0..W {
+                let tile = &next[x][y];
+                let prev_tile = self
+                    .previous
+                    .as_ref()
+                    .map(|p| &p[x][y])
+                    .unwrap_or(&Tile {
+                        c: ' ',
+                        color: Color::White,
+                    });
+                if prev_tile == tile {
                     continue;
                 }
 
-                stdout
-                    .queue(MoveTo(x as u16, y as u16))?
-                    .queue(SetForegroundColor(c.color))?
-                    .queue(Print(c.c))?;
+                stdout.queue(MoveTo(x as u16, y as u16))?;
+                if current_color != Some(tile.color) {
+                    stdout.queue(SetForegroundColor(tile.color))?;
+                    current_color = Some(tile.color);
+                }
+                stdout.queue(Print(tile.c))?;
             }
         }
 

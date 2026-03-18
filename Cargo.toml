@@ -3,5 +3,13 @@ name = "ryn"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "ryn"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ryn"
+path = "src/main.rs"
+
 [dependencies]
 crossterm = "0.27"
