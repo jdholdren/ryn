@@ -2,39 +2,344 @@
   "entities": [
     {
       "id": 0,
-      "player": true,
-      "position": { "x": 3, "y": 13 },
-      "renderable": { "char": "@", "color": "white" }
+      "position": {
+        "x": 3,
+        "y": 13
+      },
+      "renderable": {
+        "char": "@",
+        "color": "white"
+      }
     },
-    { "id": 1, "position": { "x": 3, "y": 2 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 2, "position": { "x": 4, "y": 2 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 3, "position": { "x": 3, "y": 4 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 4, "position": { "x": 4, "y": 4 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 5, "position": { "x": 3, "y": 6 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 6, "position": { "x": 4, "y": 6 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 7, "position": { "x": 8, "y": 2 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 8, "position": { "x": 9, "y": 2 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 9, "position": { "x": 8, "y": 4 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 10, "position": { "x": 9, "y": 4 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 11, "position": { "x": 8, "y": 6 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 12, "position": { "x": 9, "y": 6 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 13, "position": { "x": 13, "y": 2 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 14, "position": { "x": 14, "y": 2 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 15, "position": { "x": 13, "y": 4 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 16, "position": { "x": 14, "y": 4 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 17, "position": { "x": 13, "y": 6 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 18, "position": { "x": 14, "y": 6 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 19, "position": { "x": 13, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 20, "position": { "x": 14, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 21, "position": { "x": 15, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 22, "position": { "x": 16, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 23, "position": { "x": 17, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 24, "position": { "x": 18, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 25, "position": { "x": 19, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 26, "position": { "x": 20, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 27, "position": { "x": 21, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 28, "position": { "x": 22, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 29, "position": { "x": 23, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } },
-    { "id": 30, "position": { "x": 24, "y": 10 }, "renderable": { "char": "=", "color": "yellow" } }
+    {
+      "id": 1,
+      "position": {
+        "x": 3,
+        "y": 2
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 2,
+      "position": {
+        "x": 4,
+        "y": 2
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 3,
+      "position": {
+        "x": 3,
+        "y": 4
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 4,
+      "position": {
+        "x": 4,
+        "y": 4
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 5,
+      "position": {
+        "x": 3,
+        "y": 6
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 6,
+      "position": {
+        "x": 4,
+        "y": 6
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 7,
+      "position": {
+        "x": 8,
+        "y": 2
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 8,
+      "position": {
+        "x": 9,
+        "y": 2
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 9,
+      "position": {
+        "x": 8,
+        "y": 4
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 10,
+      "position": {
+        "x": 9,
+        "y": 4
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 11,
+      "position": {
+        "x": 8,
+        "y": 6
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 12,
+      "position": {
+        "x": 9,
+        "y": 6
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 13,
+      "position": {
+        "x": 13,
+        "y": 2
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 14,
+      "position": {
+        "x": 14,
+        "y": 2
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 15,
+      "position": {
+        "x": 13,
+        "y": 4
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 16,
+      "position": {
+        "x": 14,
+        "y": 4
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 17,
+      "position": {
+        "x": 13,
+        "y": 6
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 18,
+      "position": {
+        "x": 14,
+        "y": 6
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 19,
+      "position": {
+        "x": 13,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 20,
+      "position": {
+        "x": 14,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 21,
+      "position": {
+        "x": 15,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 22,
+      "position": {
+        "x": 16,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 23,
+      "position": {
+        "x": 17,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 24,
+      "position": {
+        "x": 18,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 25,
+      "position": {
+        "x": 19,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 26,
+      "position": {
+        "x": 20,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 27,
+      "position": {
+        "x": 21,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 28,
+      "position": {
+        "x": 22,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 29,
+      "position": {
+        "x": 23,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": 30,
+      "position": {
+        "x": 24,
+        "y": 10
+      },
+      "renderable": {
+        "char": "=",
+        "color": "yellow"
+      }
+    }
   ]
 }

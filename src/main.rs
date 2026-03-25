@@ -39,9 +39,10 @@ fn main() -> Result<()> {
 }
 
 fn run_game(location: location::Location) -> Result<()> {
-    let mut renderer = render::Renderer::<WIDTH, HEIGHT>::new();
+    let mut renderer = render::Renderer::<WIDTH, HEIGHT>::default();
 
-    let mut screen: Box<dyn Screen> = Box::new(Overworld::new(location, Path::new("initial_map/map.json")));
+    let mut screen: Box<dyn Screen> =
+        Box::new(Overworld::new(location, Path::new("initial_map/map.json")));
 
     let mut last_fps: u128 = 0;
     let mut elapsed: Duration = Duration::ZERO;

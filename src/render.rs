@@ -21,7 +21,12 @@ pub struct Frame<const W: usize, const H: usize>([[Tile; H]; W]);
 
 impl<const W: usize, const H: usize> Frame<W, H> {
     pub fn blank() -> Self {
-        Frame([[Tile { c: ' ', color: Color::White }; H]; W])
+        Frame(
+            [[Tile {
+                c: ' ',
+                color: Color::White,
+            }; H]; W],
+        )
     }
 
     pub fn set(&mut self, x: usize, y: usize, tile: Tile) {
@@ -66,11 +71,13 @@ pub struct Renderer<const W: usize, const H: usize> {
     previous: Option<Frame<W, H>>,
 }
 
-impl<const W: usize, const H: usize> Renderer<W, H> {
-    pub fn new() -> Self {
+impl<const W: usize, const H: usize> Default for Renderer<W, H> {
+    fn default() -> Self {
         Self { previous: None }
     }
+}
 
+impl<const W: usize, const H: usize> Renderer<W, H> {
     pub fn render(&mut self, next: Frame<W, H>, fps: u128) -> Result<()> {
         let mut stdout = stdout();
 
@@ -85,14 +92,10 @@ impl<const W: usize, const H: usize> Renderer<W, H> {
         for y in 0..H {
             for x in 0..W {
                 let tile = &next.0[x][y];
-                let prev_tile = self
-                    .previous
-                    .as_ref()
-                    .map(|p| &p.0[x][y])
-                    .unwrap_or(&Tile {
-                        c: ' ',
-                        color: Color::White,
-                    });
+                let prev_tile = self.previous.as_ref().map(|p| &p.0[x][y]).unwrap_or(&Tile {
+                    c: ' ',
+                    color: Color::White,
+                });
                 if prev_tile == tile {
                     continue;
                 }

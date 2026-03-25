@@ -26,7 +26,6 @@ pub struct Overworld {
 struct EntityData {
     id: usize,
     #[serde(default)]
-    player: bool,
     position: Option<Position>,
     renderable: Option<RenderableData>,
 }
@@ -54,10 +53,7 @@ impl Overworld {
             })
             .collect();
 
-        Overworld {
-            entities,
-            location,
-        }
+        Overworld { entities, location }
     }
 }
 
@@ -84,12 +80,41 @@ impl Screen for Overworld {
     }
 
     fn produce_frame(&self) -> render::Frame<WIDTH, HEIGHT> {
+        const VIEWPORT_HEIGHT: isize = 20;
+        const VIEWPORT_WIDTH: isize = 70;
+        let max_width = self.location.width as isize;
+        let max_height = self.location.height as isize;
+
         let mut frame = render::Frame::<WIDTH, HEIGHT>::blank();
 
+        // Rendering the viewport involves rendering location tiles
+        // within the viewport. These are the tiles from the
+        // top left: (player_pos.x - (VIEWPORT_WIDTH / 2), player_pos.y - (VIEWPORT_HEIGHT / 2))
+        // bottom_right: (player_pos.x + (VIEWPORT_WIDTH / 2), player_pos.y + (VIEWPORT_HEIGHT / 2))
+        //
+        // Both are basically the calc of the center point (the player), plus/minus half the viewport dimensions
+        let player_pos = self.entities.get(0).unwrap().pos.clone().unwrap();
+        let top_left = (
+            player_pos.x - (VIEWPORT_WIDTH / 2),
+            player_pos.y - (VIEWPORT_HEIGHT / 2),
+        );
+        let bottom_right = (
+            player_pos.x + (VIEWPORT_WIDTH / 2),
+            player_pos.y + (VIEWPORT_HEIGHT / 2),
+        );
+
         // Render location tiles
-        for x in 0..self.location.width.min(WIDTH) {
-            for y in 0..self.location.height.min(HEIGHT) {
-                let tile = match self.location.grid[x][y] {
+        for x in top_left.0..bottom_right.0 {
+            if x < 0 || x > max_width - 1 {
+                continue;
+            }
+
+            for y in top_left.1..bottom_right.1 {
+                if y < 0 || y > max_height - 1 {
+                    continue;
+                }
+
+                let tile = match self.location.grid[x as usize][y as usize] {
                     TileType::Wall => Tile {
                         c: '#',
                         color: Color::DarkGrey,
@@ -103,18 +128,47 @@ impl Screen for Overworld {
                         color: Color::Yellow,
                     },
                 };
-                frame.set(x, y, tile);
+
+                // Offset the position by the top left
+                frame.set((x - top_left.0) as usize, (y - top_left.1) as usize, tile);
             }
         }
 
+        // TODO: Transform this from the top left position
         // Render entities that have a position and renderable
-        for entity in &self.entities {
-            let (Some(pos), Some(r)) = (&entity.pos, &entity.renderable) else {
-                continue;
-            };
+        // for entity in &self.entities {
+        //     let (Some(pos), Some(r)) = (&entity.pos, &entity.renderable) else {
+        //         continue;
+        //     };
 
-            frame.set(pos.x, pos.y, Tile { c: r.c, color: r.color });
-        }
+        //     frame.set(
+        //         pos.x as usize,
+        //         pos.y as usize,
+        //         Tile {
+        //             c: r.c,
+        //             color: r.color,
+        //         },
+        //     );
+        // }
+
+        // Render the player last, in the middle
+        frame.set(
+            VIEWPORT_WIDTH as usize / 2,
+            VIEWPORT_HEIGHT as usize / 2,
+            Tile {
+                c: '@',
+                color: Color::Yellow,
+            },
+        );
+
+        // The border for the viewport
+        frame.draw_box(
+            0,
+            0,
+            VIEWPORT_WIDTH as usize,
+            VIEWPORT_HEIGHT as usize,
+            Color::White,
+        );
 
         frame
     }
