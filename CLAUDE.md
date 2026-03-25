@@ -29,7 +29,13 @@ The game loop in `run_game()` drives the current screen, handling input polling,
 
 Grid dimensions are constants `WIDTH=100`, `HEIGHT=54` in `src/lib.rs`.
 
+**Viewport**: The overworld renders through a centered viewport (`VIEWPORT_WIDTH=70`, `VIEWPORT_HEIGHT=20` in `src/overworld/mod.rs`) that follows the player, rather than rendering the full map. Location tiles are offset relative to the viewport's top-left corner.
+
 **Map files** (`initial_map/`): Loaded at startup by `location::load_locations`. `map.txt` defines the tile grid (`#`=Wall, `=`=Table, anything else=Floor). `map.json` defines entities to spawn. Both are required at startup.
+
+**Known WIP:**
+- Non-player entity rendering is commented out (needs viewport coordinate transformation).
+- Collision checks in `MovementSystem` don't happen and can overshoot obstacles.
 
 ## Style
 
