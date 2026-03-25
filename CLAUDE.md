@@ -16,7 +16,7 @@ Ryn is a terminal-based game written in Rust (edition 2024) using the `crossterm
 
 ## Architecture
 
-The game uses a **Screen** trait (`src/main.rs`) as its core abstraction. Each screen receives input and elapsed time via `update()`, returns whether to render/quit, and produces a frame via `produce_frame()`.
+The game uses a **Screen** trait (`src/lib.rs`) as its core abstraction. Each screen receives input and elapsed time via `update()` — returning `true` means **quit** — and produces a frame via `produce_frame()`.
 
 The game loop in `run_game()` drives the current screen, handling input polling, update, and render each tick. Screens are swapped via `Box<dyn Screen>`.
 
@@ -27,4 +27,11 @@ The game loop in `run_game()` drives the current screen, handling input polling,
 - `Frame<W, H>` — `[[Tile; H]; W]`, column-major (x is the outer index)
 - `Screen` — trait for game screens (title, overworld, etc.)
 
-Grid dimensions are constants `WIDTH=100`, `HEIGHT=54` in `main.rs`.
+Grid dimensions are constants `WIDTH=100`, `HEIGHT=54` in `src/lib.rs`.
+
+**Map files** (`initial_map/`): Loaded at startup by `location::load_locations`. `map.txt` defines the tile grid (`#`=Wall, `=`=Table, anything else=Floor). `map.json` defines entities to spawn. Both are required at startup.
+
+## Style
+
+- Prefer early returns / `continue` with `let ... else` in loops over nesting with `if let`.
+- Each ECS system and its related components live in their own module under `src/overworld/` (e.g., `movement.rs` has `Position`, `Velocity`, and `MovementSystem`; `renderable.rs` has `Renderable`).

@@ -16,7 +16,8 @@ pub const HEIGHT: usize = 54;
 pub trait Screen {
     // Update receives elapsed time and updates its state based on player input.
     // Returns true if the game should quit.
-    fn update(&mut self, event: Option<KeyEvent>, elapsed: Duration) -> bool;
+    fn update(&mut self, event: Option<KeyEvent>, elapsed: Duration);
+
     // Produces the current frame for rendering.
     fn produce_frame(&self) -> render::Frame<WIDTH, HEIGHT>;
 }

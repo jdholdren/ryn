@@ -19,17 +19,17 @@ const FRAME_DURATION: Duration = Duration::from_millis(1000 / TARGET_FPS);
 
 fn main() -> Result<()> {
     // Load all locations before entering raw mode (fast-fail on bad data)
-    let mut locations = location::load_locations(Path::new("maps"));
-    let spawn = locations
-        .remove("school_room")
-        .expect("maps/school_room.txt is required");
+    let mut locations = location::load_locations(Path::new("initial_map"));
+    let location = locations
+        .remove("map")
+        .expect("initial_map/map.txt is required");
 
     // Setup terminal
     enable_raw_mode()?;
     // Hide the cursor
     execute!(stdout(), Hide)?;
 
-    let result = run_game(spawn);
+    let result = run_game(location);
 
     // Cleanup
     execute!(stdout(), Show, ResetColor)?;
@@ -38,10 +38,10 @@ fn main() -> Result<()> {
     result
 }
 
-fn run_game(spawn: location::Location) -> Result<()> {
+fn run_game(location: location::Location) -> Result<()> {
     let mut renderer = render::Renderer::<WIDTH, HEIGHT>::new();
 
-    let mut screen: Box<dyn Screen> = Box::new(Overworld::new("School Room".to_string(), spawn));
+    let mut screen: Box<dyn Screen> = Box::new(Overworld::new(location, Path::new("initial_map/map.json")));
 
     let mut last_fps: u128 = 0;
     let mut elapsed: Duration = Duration::ZERO;
@@ -53,6 +53,7 @@ fn run_game(spawn: location::Location) -> Result<()> {
         if poll(Duration::from_millis(1)).unwrap_or(false)
             && let Ok(event) = read()
             && let Event::Key(key) = event
+            && key.kind == crossterm::event::KeyEventKind::Press
         {
             key_press = Some(key);
         }
@@ -67,10 +68,8 @@ fn run_game(spawn: location::Location) -> Result<()> {
             break;
         }
 
-        // Run update loop
-        if screen.update(key_press, elapsed) {
-            break;
-        }
+        // Run update loop of the current screen
+        screen.update(key_press, elapsed);
 
         // Render
         renderer.render(screen.produce_frame(), last_fps)?;
